@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Online clothing store</title>
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <section id="header">
+            <div>
+                <ul id="navbar">
+                <li><a   href="index.html">Home</a></li>
+                <li><a class="active" href="shop.html">shop</a></li>
+                <!-- <li><a href="blog.html">blog</a></li> -->
+                <li><a href="about.html">about</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cart.html"><i class ="far fa-shopping-bag"></i></a></li>
+                </ul>
+            </div>
+
+        </section>
+
+        <section id="prodetails" class="section-p1">
+            <div class="single-pro-image">
+             <img src="image/f1.jpg"  width="100%" id="MainImg" alt="">
+            
+
+             <div class="small-img-group">
+                <div class="small-img-col">
+                 <img src="image/f4.jpg" width="100%" class="small-img" alt="">
+             </div>
+
+             
+                <div class="small-img-col">
+                 <img src="image/f5.jpg" width="100%" class="small-img" alt="">
+             </div>
+
+            
+                <div class="small-img-col">
+                 <img src="image/f6.jpg" width="100%" class="small-img" alt="">
+             </div>
+
+             
+                <div class="small-img-col">
+                 <img src="image/f1.jpg" width="100%" class="small-img" alt="">
+             </div>
+            </div>
+        </div>
+
+
+             <div class="single-pro-details">
+                <h6> Home/ T-shirt</h6>
+                <h4> Men's Fashion T-shirt</h4>
+                <h2> $139.00</h2>
+
+                <select>
+                   <option> Select Size</option> 
+                   <option> XL</option> 
+                   <option> XXL</option> 
+                   <option> Small</option> 
+                   <option> Large</option> 
+                </select>
+
+                <input type="number" value="1">
+                <button class="normal"> Add To Cart</button>
+                <h4> Product Details</h4>
+                <span>The aloha shirt (Hawaiian: palaka aloha), also referred to as a Hawaiian shirt, is a style of dress shirt originating in Hawaii. They are collared and buttoned dress shirts, usually short-sleeved and made from printed fabric. Featuring a taped neck and shoulder, and a seamless double-needle color, and available in a rang of colors, it offers it all in the ultimate head-turning package. </span>
+        </div>
+        </section>
+
+
+        <section id="product1" class="section-p1">
+            <h2> Featured Products</h2>
+            <p> Summer Collection New Modern Design</p>
+             <div class="pro-container">
+                <div class="pro">
+                    <img src="image/n1.jpg">
+                    <div class="des">
+                        <span>adidas</span>
+                        <h5> Cartoon Astronaut T-shirt</h5>
+                        <div class="star">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h4>$78</h4>
+                    </div>
+                    <a href="#"><i class="fal fa-shopping-cart cart"></i></a>
+                </div>
+
+                
+                    <div class="pro">
+                        <img src="image/n2.jpg">
+                        <div class="des">
+                            <span>adidas</span>
+                            <h5> Cartoon Astronaut T-shirt</h5>
+                            <div class="star">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h4>$78</h4>
+                        </div>
+                        <a href="#"><i class="fal fa-shopping-cart cart"></i></a>
+                    </div>
+
+                  
+                        <div class="pro">
+                            <img src="image/n3.jpg">
+                            <div class="des">
+                                <span>adidas</span>
+                                <h5> Cartoon Astronaut T-shirt</h5>
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <h4>$78</h4>
+                            </div>
+                            <a href="#"><i class="fal fa-shopping-cart cart"></i></a>
+                        </div>
+
+                            <div class="pro">
+                                <img src="image/n4.jpg">
+                                <div class="des">
+                                    <span>adidas</span>
+                                    <h5> Cartoon Astronaut T-shirt</h5>
+                                    <div class="star">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <h4>$78</h4>
+                                </div>
+                                <a href="#"><i class="fal fa-shopping-cart cart"></i></a>
+                            </div>
+                        </section>
+
+         <script>
+            var MainImg= document.getElementById("MainImg");
+            var smallImg= document.getElementsByClassName("small-img");
+
+            smallImg[0].onclick = function(){
+                MainImg.src= smallImg[0].src;
+            }
+            smallImg[1].onclick = function(){
+                MainImg.src= smallImg[1].src;
+            }
+            smallImg[2].onclick = function(){
+                MainImg.src= smallImg[2].src;
+            }
+            smallImg[3].onclick = function(){
+                MainImg.src= smallImg[3].src;
+            }
+         </script>                  
+                                
+
+                                
+                                 
+
+                                    
+
+                                        
+        <script src="script.js"></script>
+    </body>
+
+</html>
