@@ -1,11 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Form</title>
+  <link rel="stylesheet" href="login.css">
 </head>
+
 <body>
-    
+  <div class="container">
+    <h2>Login as Guest Page</h2>
+    <form action="#" method="POST" id="loginForm">
+      <input type="text" id="username" name="username" placeholder="Username or Email" class="form-control" required>
+      <input type="password"id="password" name="password" placeholder="Password" class="form-control" required>
+      <label><input type="checkbox" name="remember"> Remember me</label>
+      <input type="submit" value="Login">
+    </form>
+    <div class="options">
+      <a href="#">Lost your password?</a><br>
+      <a href="#">Don't have an account yet? Sign up</a>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="login.js"></script>
 </body>
 </html>
