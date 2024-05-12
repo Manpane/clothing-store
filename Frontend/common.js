@@ -49,6 +49,7 @@ function showMessage(message, messageType) {
   setTimeout(() => {
     document.body.removeChild(messageElement);
   }, 5000);
+
 }
 
 
@@ -73,4 +74,3 @@ if (authButtons) {
     authButtons.innerHTML = `<button onclick="openLogin()">Login</button>
       <button onclick="openSignup()">Signup</button>`;
   }
-}
