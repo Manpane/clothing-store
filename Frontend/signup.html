@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Form</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="signup.css">
+</head>
+<body>
+    <div class="container">
+
+        <h2>Register</h2>
+        <form id="signup-form" action="#" method="post">
+            <label for="username">Username</label>
+            <input type="text" id = "username" name="first_name" placeholder="Enter your Username"  class="form-control" required>
+            <br>
+            <label for="email">Email</label>
+            <input type="email" id = "email" name="email" placeholder="Enter your email" class="form-control" required>
+            <br>
+            <label for="password">Password</label>
+            <input type="password" id = "password" name="password" placeholder="Enter your password" class="form-control" required>
+            <input type="submit" value="Create My Account">
+        </form>
+    </div>
+
+    <script src="common.js"></script>
+
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            let username = document.getElementById('username').value;
+            let email = document.getElementById('email').value;
+            let password = document.getElementById('password').value;
+            try {
+                const response = await fetch(`${API_BASE_URL}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password
+                    })
+                });
+
+                const data = await response.json();
+                if (data.newUser) {
+                    showSuccess('User signup was successfull. Redirecting to login page...');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 1500);
+                } else {
+                    showError(data.error);
+                }
+
+            } catch (error) {
+                console.error('An error occurred:', error);
+                showError('An error occurred. Please try again later.');
+            }
+        });
+    </script>
+</body>
+</html>
