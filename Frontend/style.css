@@ -758,18 +758,54 @@ button {
       border-radius: 20px;
   }
   
-  
-  /* cart page */
-  #page-header.cart-header{
-      background-image: url("image/b16.jpg") ;
-  }
-  
-  #cart .listcart .item{
-      display: grid;
-      grid-template-columns: 70px 150px 50px 1fr;
-      gap: 10px;
-      text-align: center;
-      align-items: center;
-  }
-  
+  /* contact page */
+#page-header.contact-header{
+    background-image: url("image/city.png") ;
+}
+#page-header.contact-header h2,
+#page-header.contact-header p{
+    color: white;
+}
+#contact-detail{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#contact-detail .details{
+    width: 40%;
+}
+#contact-detail .details span{
+    font-size: 12px;
+}
+#contact-detail .details h2{
+    font-size: 26px;
+    line-height: 35px;
+    padding: 20px 0;
+}
+#contact-detail .details h3{
+    font-size: 16px;
+    padding-bottom:15px;
+}
+#contact-detail .details li{
+    list-style: none;
+    display: flex;
+    padding: 10px 0;
+}
+#contact-detail .details li i{
+    font-size: 14px;
+    padding-right: 22px;
+}
+#contact-detail .details li p{
+    margin: 0;
+    font-size: 14px;
+}
+#contact-detail  .map{
+    width: 55%;
+    height:400px;
+}
+#contact-detail  .map iframe{
+    width: 100%;
+    height: 100%;
+}
+
 
