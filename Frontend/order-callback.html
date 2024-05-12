@@ -84,21 +84,22 @@
         res.json()
         .then((data) => {
           if (data?.order) {
-            
-            window.location.href = "/product.html";
+            setTimeout(()=>{
+              window.location.href = "/index.html";
+            },2000);
           } else {
             showError("Order couldn't be verified! Please try again.")
-            // setTimeout(() => {
-            //   window.location.href = "/index.html";
-            // }, 3000);
+            setTimeout(() => {
+              window.location.href = "/index.html";
+            }, 4000);
           }
         })
       )
       .catch(err=>{
         showError("Order couldn't be verified! Please try again.")
-        // setTimeout(() => {
-        //   window.location.href = "/index.html";
-        // }, 3000);
+        setTimeout(() => {
+          window.location.href = "/index.html";
+        }, 4000);
       });
     </script>
   </body>
