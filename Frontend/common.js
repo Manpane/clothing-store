@@ -48,7 +48,8 @@ function showMessage(message, messageType) {
 
   setTimeout(() => {
     document.body.removeChild(messageElement);
-  }, 60000);
+  }, 5000);
+
 }
 
 
@@ -56,3 +57,20 @@ function logout() {
   setCookie("token", "", 0);
   window.location.href = "/login.html";
 }
+
+function openLogin() {
+  window.location.href = "/login.html";
+}
+
+function openSignup() {
+  window.location.href = "/signup.html";
+}
+
+const authButtons = document.getElementById("auth-buttons");
+if (authButtons) {
+  if (getCookie("token")) {
+    authButtons.innerHTML = `<button class="btn btn-danger" onclick="logout()">Logout</button>`;
+  } else {
+    authButtons.innerHTML = `<button onclick="openLogin()">Login</button>
+      <button onclick="openSignup()">Signup</button>`;
+  }

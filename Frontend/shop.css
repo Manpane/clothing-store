@@ -1,0 +1,38 @@
+#filter{
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    flex-direction: row;
+}
+
+#filter > form{
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+}
+
+#filter > form > input{
+    padding: 10px;
+    min-width: 40vw;
+}
+#search-button{
+    margin-left: 20px;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#filter select{
+    min-width: 100px;
+}
+
+#filter option{
+    background-color: #f8f9fa;
+    padding: 5px;
+    background-color: beige;
+}
