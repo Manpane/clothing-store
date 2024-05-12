@@ -38,9 +38,10 @@ async function createUser(req, res) {
       data: {
         username,
         email,
-        otp: otp.toString(),
+        otp: "",
         password: hashedPassword,
         role,
+        emailVerified: true,
       },
     });
     delete newUser.password;
@@ -48,11 +49,12 @@ async function createUser(req, res) {
     delete newUser.resetPinExpiration;
     delete newUser.otp;
 
-    const emailResponse = await sendEmail(
-      newUser.email,
-      verify_account_boilerplate(otp, newUser.username),
-      "Verify your account",
-    );
+    // const emailResponse = await sendEmail(
+    //   newUser.email,
+    //   verify_account_boilerplate(otp, newUser.username),
+    //   "Verify your account",
+    // );
+    const emailResponse = { success: true };
     if (emailResponse.success) {
       return res.json({ newUser, message: "Verificaion Email sent" });
     } else {

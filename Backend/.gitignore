@@ -8,4 +8,4 @@ package-lock.json
 
 prisma/migrations
 
-database/bikers_data
+database/clothing_data
