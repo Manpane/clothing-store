@@ -1,137 +1,82 @@
 const { PrismaClient } = require('@prisma/client');
 const { StatusCodes } = require('http-status-codes');
-const { sendEmail } = require("../../services/email.services");
-const { verify_order_boilerplate } = require("../boilerplates.data");
 const prisma = new PrismaClient();
 const { ORDER_STATUS } = require('../../constants/order.constants');
+const { initiateKhaltiPayment } = require('../../services/khalti.services');
 
 const createOrder = async (req, res) => {
     const user_id = req.userId;
-    let { delivery_address, delivery_contact, cartItems } = req.body;
+    let { productid } = req.params;
+    const {
+        delivery_address,
+        delivery_contact,
+        return_url,
+        website_url,
+        quantity
+    } = req.body;
 
-    const user = await prisma.user.findUnique({
+    const product = await prisma.product.findUnique({
         where: {
-            id: user_id
+            id: parseInt(productid)
         }
     });
-    if (!delivery_contact) {
-        delivery_contact = user.contact;
-    }
-    if (!delivery_address) {
-        delivery_address = user.address;
-    }
-    if (cartItems.length === 0) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ message: "No items in cart" });
-    }
 
-
-    let total_amount = 0;
-    let orderItems = [];
-
-    console.log(cartItems);
-
-    for (let cartItem of cartItems) {
-        const category = await prisma.category.findUnique({
-            where: {
-                id: cartItem.product.category_id
-            }
-        });
-        let discountPer = 0;
-        if (category) {
-            discountPer = category.discount;
-        }
-        total_amount += ((cartItem.product.product_price - (cartItem.product.product_price*(discountPer/100))) * cartItem.quantity);
-        let cartProduct = await prisma.product.findUnique({ 
-            where: { id: cartItem.product_id }
-        });
-        if (!cartProduct) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: "Product not found", product_id: cartItem.product_id });
-        }
-        orderItems.push({
-            product_id: cartItem.product_id,
-            quantity: cartItem.quantity,
-            price: cartItem.product.price
-        });
+    if (!product) {
+        return res.status(StatusCodes.NOT_FOUND).json({ message: "Product not found" });
     }
 
     const order = await prisma.order.create({
         data: {
-            total_amount,
-            delivery_address,
-            delivery_contact,
             user_id,
             order_status: ORDER_STATUS.PENDING,
-            OTP: `${Math.floor(100000 + Math.random() * 100000)}`
+            delivery_address,
+            delivery_contact,
+            OTP: "",
+            total_amount: product.product_price*Number(quantity),
         }
     });
-    await sendEmail(user.email, verify_order_boilerplate(order.OTP, user.username), "Verify your order");
-    
-    orderItems = orderItems.map(orderItem => {
-        return {
-            ...orderItem,
-            order_id: order.id
-        };
-    });
-    await prisma.orderItem.createMany({
-        data: orderItems
-    });
-    for (let cartItem of cartItems) {
-        console.log(cartItem);
-        await prisma.cartItem.deleteMany({
-            where: {
-                user_id,
-                product_id: cartItem.product_id
-            }
-        });
-    }
-    const ordered_items = await prisma.orderItem.findMany({
-        where: {
-            order_id: order.id
-        },
-        include: {
-            product: true
-        }
-    });
-    order.orderItems = ordered_items;
-    return res.status(StatusCodes.CREATED).json({ order });
-};
 
-const verifyOrderOTP = async (req, res) => {
+    await prisma.orderItem.create({
+        data: {
+            order_id: order.id,
+            product_id: product.id,
+            quantity: parseInt(quantity),
+        }
+    });
+
     try {
-        const order_id = parseInt(req.params.orderID);
-        let { OTP } = req.body;
-        OTP = OTP?.trim();
-        if (!OTP || OTP.length !== 6) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: "Invalid OTP" });
+        let pidx, payment_url;
+        try {
+            const khaltiResponse = await initiateKhaltiPayment({
+                return_url,
+                website_url,
+                amountInRs: product.product_price*quantity,
+                purchase_order_id: order.id,
+                purchase_order_name: `${product.id}-${product.product_name}`,
+            });
+            pidx = khaltiResponse.pidx;
+            payment_url = khaltiResponse.payment_url;
+            return res.status(StatusCodes.OK).json({
+                success: true,
+                message: "Payment initiated",
+                order,
+                payment_url,
+                pidx
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: "Failed to initiate payment"
+            });
         }
-        const order = await prisma.order.findUnique({
-            where: {
-                id: order_id
-            }
-        });
-        if (!order) {
-            return res.status(StatusCodes.NOT_FOUND).json({ message: "Order not found" });
-        }
-        if (order.OTP.trim() === "") {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: "OTP already verified" });
-        }
-        if (order.OTP !== OTP) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: "OTP authentication failure" });
-        }
-        await prisma.order.update({
-            where: {
-                id: order_id
-            },
-            data: {
-                OTP: ""
-            }
-        });
-        return res.status(StatusCodes.OK).json({ message: "Order verified." });
-        
     } catch (error) {
-        console.log(error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: "Failed to create order"
+        });
     }
-}
+};
 
 const updateOrder = async (req, res) => {
     const order_id = req.params.orderID;
@@ -230,5 +175,4 @@ module.exports = {
     updateOrder,
     cancelOrder,
     deleteOrder,
-    verifyOrderOTP
 }
