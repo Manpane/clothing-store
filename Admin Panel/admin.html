@@ -100,20 +100,6 @@
         <tbody></tbody>
       </table>
       <br />
-      <br />
-      <h3>Assign Discount Percent</h3>
-      <br />
-      <table id="categories-table">
-        <thead>
-          <tr>
-            <th>Category ID</th>
-            <th>Category Name</th>
-            <th>Discount Percent</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
     </div>
     <div id="orderUserModal" class="order-user-modal">
       <div class="order-user-modal-content">
@@ -122,7 +108,6 @@
           >&times;</span
         >
         <div class="order-user-details">
-          <img id="order-user-profile-image" src="./Images/user-avatar.png" alt="Profile Picture" />
           <p><b style="margin-right: 5px;">Username:</b><span id="order-user-name"></span></p><br>
           <p><b style="margin-right: 5px;">Email:</b><span id="order-user-email"></span></p><br>
           <p><b style="margin-right: 5px;">Address:</b><span id="order-user-address"></span></p><br>
@@ -141,27 +126,16 @@
 
       getSuperAdminDetails();
 
-      function openOrderUserModal(user) {
-        console.log({...user});
-        // return;
+      function openOrderUserModal(order) {
         document.getElementById("orderUserModal").style.display = "block";
-        let imageUrl = "";
-        if (user.profilePicture.length>0){
-          imageUrl = user.profilePicture.startsWith("/files") ? `${API_BASE_URL}${user.profilePicture}` : user.profilePicture;
-        }else{
-          imageUrl = "/Images/user-avatag.png";
-        }
-        
-        document.getElementById("order-user-profile-image").src = imageUrl;
-        document.getElementById("order-user-email").textContent = user.email;
-        document.getElementById("order-user-name").textContent = user.username;
-        document.getElementById("order-user-address").textContent = user.address;
-        document.getElementById("order-user-contact").textContent = user.contact;
+        document.getElementById("order-user-email").textContent = order.user.email;
+        document.getElementById("order-user-name").textContent = order.user.username;
+        document.getElementById("order-user-address").textContent = order.delivery_address;
+        document.getElementById("order-user-contact").textContent = order.delivery_contact;
       }
 
       function closeOrderUserModal() {
         document.getElementById("orderUserModal").style.display = "none";
-        document.getElementById("order-user-profile-image").src = "/Images/user-avatag.png";
         document.getElementById("order-user-email").textContent = "";
         document.getElementById("order-user-name").textContent = "";
         document.getElementById("order-user-address").textContent = "";
@@ -179,7 +153,6 @@
           if (window.PROFILE?.role?.toLowerCase().trim() === "admin") {
             window.location.href = "/index.html";
           }
-          loadCategories();
           fetchOrders();
         } catch (error) {
           console.error("Error fetching profile:", error);
@@ -226,7 +199,7 @@
           tbody.appendChild(row);
 
           document.getElementById(`order-${order.id}-username`).addEventListener("click", e=>{
-            openOrderUserModal(order.user);
+            openOrderUserModal(order);
           })
           const selectOptions = document.getElementById(
             `order-status-select-${order.id}`
@@ -246,59 +219,6 @@
           await fetchOrders();
           showSuccess("Order changed to delivered!");
         }
-      }
-
-      async function loadCategories() {
-        const data = await fetchCategories();
-        const categoriesTable = document.getElementById("categories-table");
-        const tbody = categoriesTable.querySelector("tbody");
-
-        data.forEach((category) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${category.id}</td>
-            <td>${category.category_name}</td>
-            <td><input type="number" id="discount-${
-              category.id
-            }" min="0" max="100" step="1" value="${
-            category.discount || 0
-          }"></td>
-            <td><button onclick="assignDiscount(${
-              category.id
-            })">Assign Discount</button></td>
-          `;
-          tbody.appendChild(row);
-        });
-      }
-
-      function assignDiscount(categoryId) {
-        const discountPercent = document.getElementById(
-          `discount-${categoryId}`
-        )?.value;
-
-        if (!discountPercent) {
-          showError("Couldn't locate discount input");
-          return;
-        }
-
-        fetch(`${API_BASE_URL}/category/${categoryId}/discount`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ discount: discountPercent }),
-        })
-          .then((response) => {
-            if (response.ok) {
-              showSuccess("Discount assigned successfully!");
-            } else {
-              showError("Failed to assign discount!");
-            }
-          })
-          .catch((error) => {
-            showError("Error assigning discount:");
-          });
       }
     </script>
   </body>
