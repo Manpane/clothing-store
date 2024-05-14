@@ -13,12 +13,11 @@ const {
 
 
 const { verifyToken, emailVerified, validationMiddleware } = require("../middleware/auth.middleware");
-const { createReviewSchema } = require("../zod_validation/all.zod.validation");
 
 const router = require("express").Router();
 
 router.route("/review")
-  .post(verifyToken, emailVerified, validationMiddleware(createReviewSchema), addReview)
+  .post(verifyToken, emailVerified, addReview)
   .get(getReviews);
 router.get("/product/:id/reviews/", getProductReviews);
 router.get("/product/:id/myreviews/",verifyToken, emailVerified,getProductMyReviews);
