@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Admin Panel</title>
+  </head>
+
+  <body>
+    <header>
+      <!-- email not verified text with verify email button -->
+      <div class="email-verify" style="display: none;">
+        <p id="not-verified-text">
+          Your email is not verified. Please verify your email to continue.
+        </p>
+        <button class="btn btn-sm btn-primary" id="verify-email-button">
+          Verify Email
+        </button>
+    </header>
+    <section id="sidebar">
+      <a href="#" class="brand">
+        <img src="Images/Vector.png" alt="Clothing Store Zone Logo" />
+        <span class="dash">Clothing Store</span><span class="stack">Zone</span>
+      </a>
+      <ul class="side-menu top">
+        <li class="active">
+          <a href="#dashboard">
+            <i class="bx bxs-dashboard"></i>
+            <span class="text">Dashboard</span>
+          </a>
+        </li>
+
+        <li class="active">
+          <a href="#cat-head">
+            <i class="bx bx-category-alt"></i>
+            <span class="text">Categories</span>
+          </a>
+        </li>
+        <li class="active">
+          <a href="#product-head">
+            <i class="bx bxs-shopping-bag-alt"></i>
+            <span class="text">Products</span>
+          </a>
+        </li>
+
+      </ul>
+      <ul class="side-menu">
+        <li>
+          <a style="cursor: pointer;" id="settings-button" onclick="openProfileModal()">
+            <i class="bx bx-cog"></i>
+            <span class="text">Settings</span>
+          </a>
+        </li>
+        <li>
+          <a style="cursor: pointer" class="logout" id="logout-button">
+            <i class="bx bx-log-out-circle"></i>
+            <span class="text">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+    <section id="content">
+      <nav id="top-nav">
+        <div style="width: 100%;display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+          <i class="bx bx-menu"></i>
+          <a href="#" class="profile">
+            <img src="Images/user-avatar.png" alt="Profile Image" />
+            <span class="admin-role">
+              <h4></h4>
+              <p></p>
+            </span>
+            <i class="bx bx-chevron-down"></i>
+          </a>
+        </div>
+      </nav>
+      <main>
+        <div id="dashboard">
+          <div class="left">
+            <h1>Dashboard</h1>
+          </div>
+          <a href="" class="btn-download">
+            <i id="download-analytics-button" class="bx bx-arrow-to-bottom"></i>
+          </a>
+        </div>
+        <ul class="box-info">
+          <li>
+            <i class="bx bxs-cart"></i>
+            <span class="text">
+              <p>Total Orders</p><br>
+              <h3 id="total-orders-data-value">10,293</h3>
+            </span>
+          </li>
+          <li>
+            <i class="bx bx-line-chart"></i>
+            <span class="text">
+              <p>Total Sales</p><br>
+              <h3 id="total-sales-data-value">RS 50,689</h3>
+            </span>
+          </li>
+          <li>
+            <i class="bx bxs-hourglass"></i>
+            <span class="text">
+              <p>Pending Orders</p><br>
+              <h3 id="pending-orders-data-value">2040</h3>
+            </span>
+          </li>
+        </ul>
+        <div class="chart-container">
+          <canvas id="myChart"></canvas>
+        </div>
+        <div class="row">
+          <div class="card card-body">
+            <h2 id="cat-head">Category</h2>
+
+            <button class="btn btn-sm btn-primary" id="create-category-opener">
+              <i class="bx bx-plus"></i>
+              Create Category
+            </button>
+            <div class="category-form-wrapper hidden">
+              <input
+                class="category-form-control"
+                type="text"
+                id="category_name_input"
+                placeholder="Category Name"
+                required
+              />
+              Image:
+              <input
+                class="category-form-control"
+                type="file"
+                id="category_image_input"
+                placeholder="Image URL"
+                required
+              />
+              <img
+                alt="new category image"
+                id="upload-category-image"
+                style="width: 70px; display: none"
+              />
+              <button class="btn btn-sm btn-info" id="addCategoryButton">
+                Add
+              </button>
+            </div>
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Category Name</th>
+                  <th scope="col">Image</th>
+                  <th scope="col">Edit/Delete</th>
+                </tr>
+              </thead>
+              <tbody id="category-table"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="prod-row">
+          <div class="prod-card card-body">
+            <h2 id="product-head">Products</h2>
+
+            <button class="add-prod-btn btn btn-sm btn-primary" id="add-prod">
+              <i class="bx bx-plus"></i>
+              Add Product
+            </button>
+            <div class="prod-form-wrap prod-hidden">
+              <input
+                class="form-input"
+                type="text"
+                id="prod-name"
+                placeholder="Product Name"
+                required
+              />
+              <select class="form-input" id="choose-cat"></select>
+              <input
+                class="form-input"
+                type="number"
+                id="prod-price"
+                placeholder="Price"
+                min="0"
+                step="0.01"
+                required
+              />
+              <textarea
+                class="form-input"
+                id="prod-desc"
+                placeholder="Description"
+                required
+              ></textarea>
+              Images:
+              <input
+                class="form-input"
+                type="file"
+                multiple
+                id="prod-img"
+                required
+              />
+              <div
+                id="preview-images"
+                style="display: none; flex-direction: row"
+              ></div>
+
+              <button class="btn btn-sm btn-info" id="create-prod">Add</button>
+            </div>
+
+            <table class="pTable">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Image</th>
+                  <th scope="col">Edit/Delete</th>
+                </tr>
+              </thead>
+              <tbody id="prods-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </section>
+    <div class="modal" id="editProductModal">
+    </div>
+
+    <div id="update-profile-modal" class="profile-modal">
+  </div>
+
+    <script src="./common.js"></script>
+    <script src="./api.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
