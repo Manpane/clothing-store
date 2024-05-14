@@ -57,7 +57,7 @@
           id="delivery-contact"
           placeholder="Delivery Contact"
         />
-        <span style="width: 100%;">Quantity</span>
+        <span style="width: 100%">Quantity</span>
         <input
           class="field"
           type="number"
@@ -71,8 +71,58 @@
         </div>
       </div>
     </div>
+    <div class="review-add-card-container" id="review-add-card-container">
+      <div id="review-card" class="card">
+        <div
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: end;
+            justify-content: space-between;
+          "
+        >
+          <h3>Review Details</h3>
+          <div
+            id="close-review-modal-button"
+            style="
+              background-color: rgb(176, 176, 176);
+              border-radius: 100px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+            "
+          >
+            <i style="font-size: 2em; color: red" class="bx bx-x"></i>
+          </div>
+        </div>
+        <input
+          class="field"
+          type="text"
+          id="review-text"
+          placeholder="Your review"
+        />
+        <span style="width: 100%">Rating</span>
+        <input
+          class="field"
+          type="number"
+          value="1"
+          min="1"
+          max="100"
+          id="rating-quanity"
+        />
+        <div class="buttonContainer">
+          <button onclick="addReview()" class="acceptButton" id="proceed-button">Add</button>
+        </div>
+      </div>
+    </div>
     <section id="header">
-      <div><a href="index.html"><img src="image/logo.jpg" alt="" style="width: 50px;"></a></div>
+      <div>
+        <a href="index.html"
+          ><img src="image/logo.jpg" alt="" style="width: 50px"
+        /></a>
+      </div>
       <div>
         <ul id="navbar">
           <li><a href="index.html">Home</a></li>
@@ -81,9 +131,7 @@
           <li><a href="contact.html">Contact</a></li>
         </ul>
       </div>
-      <div id="auth-buttons">
-
-      </div>
+      <div id="auth-buttons"></div>
     </section>
     <center>
       <section id="product-detail">
@@ -103,20 +151,27 @@
             alt=""
           />
         </div>
-        <div id="details">
-          <h3 class="product-name">Best T Shirt</h3>
-
-          <p class="product-description">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sit,
-            magni!
-          </p>
-          <p class="product-price">NPR. 450</p>
-
-          <br />
-          <button>Purchase</button>
+        <div id="right-section">
+          <div id="details">
+            <h3 class="product-name">Best T Shirt</h3>
+  
+            <p class="product-description">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sit,
+              magni!
+            </p>
+            <p class="product-price">NPR. 450</p>
+  
+            <br />
+            <button>Purchase</button>
+            <br />
+          </div>
+          <br>
         </div>
       </section>
     </center>
+    <div id="reviews">
+
+    </div>
 
     <script src="common.js"></script>
     <script src="api.js"></script>
@@ -127,9 +182,6 @@
       }
       async function populateData() {
         const product = await fetchProduct(productID);
-        // console.log(product);
-
-        // return;
         const productDetail = document.getElementById("product-detail");
         const slider = productDetail.querySelector(".slider");
         const previewImage = productDetail.querySelector("#preview-image");
@@ -142,9 +194,9 @@
         const purchaseButton = details.querySelector("button");
         purchaseButton.addEventListener("click", () => {
           if (!token) {
-              showError("Please login to place order");
-              return;
-            }
+            showError("Please login to place order");
+            return;
+          }
           document.getElementById("card-container").style.display = "flex";
           document.getElementById("delivery-address").focus();
         });
@@ -181,9 +233,9 @@
               );
               if (orderResponse) {
                 showSuccess("Order placed successfully");
-                console.log({orderResponse});
+                console.log({ orderResponse });
                 const payment_url = orderResponse.payment_url;
-                if (payment_url){
+                if (payment_url) {
                   window.location.href = payment_url;
                 } else {
                   showError("Failed to place order");
@@ -209,12 +261,59 @@
             previewImage.querySelector("img").src = img.src;
           });
         });
+        const reviews = product.reviews;
+        const reviewContainer = document.getElementById("reviews");
+        if (reviews.length==0){
+          reviewContainer.innerHTML = "No reviews yet";
+        }
+        reviews.forEach((review) => {
+          const reviewElement = document.createElement("div");
+          reviewElement.classList.add("review");
+          reviewElement.innerHTML = `
+          <b>${review?.user?.username}</b>
+          <span>${review.review}</span>
+          <div class="rating">
+            ${Array.from({ length: 5 }).map((_, index) => {
+              return `<label for="star${index + 1}" style="color: ${
+                index < review.rating ? "gold" : "grey"
+              }"></label>`;
+            }).join("")}
+            </div>
+            `;
+            reviewContainer.appendChild(reviewElement);
+          });
+          reviewContainer.innerHTML += `<div style="display:flex;flex-direction:row;justify-content: space-between;align-items:center;"><h3>Reviews and Ratings</h3><button onclick="openAddReviewModal()">Add Review</button></div>`;
       }
       document
         .getElementById("close-modal-button")
         .addEventListener("click", () => {
           document.getElementById("card-container").style.display = "none";
         });
+      document
+        .getElementById("close-review-modal-button")
+        .addEventListener("click", () => {
+          document.getElementById("review-add-card-container").style.display = "none";
+        });
+
+      async function openAddReviewModal(){
+        if (!token) {
+          showError("Please login to add review");
+          return;
+        }
+        document.getElementById("review-add-card-container").style.display = "flex";
+      }
+
+      async function addReview(){
+        const reviewText = document.getElementById("review-text").value;
+        const rating = document.getElementById("rating-quanity").value;
+        if (!reviewText.trim() || !rating) {
+          showError("Please fill all the fields");
+          return;
+        }
+        await createReview(productID,reviewText,rating);
+        showSuccess("Review added successfully");
+        window.location.reload();
+      }
       populateData();
     </script>
   </body>

@@ -20,7 +20,11 @@
 
   <body>
     <section id="header">
-      <div><a href="index.html"><img src="image/logo.jpg" alt="" style="width: 50px;"></a></div>
+      <div>
+        <a href="index.html"
+          ><img src="image/logo.jpg" alt="" style="width: 50px"
+        /></a>
+      </div>
       <div>
         <ul id="navbar">
           <li><a href="index.html">Home</a></li>
@@ -29,9 +33,7 @@
           <li><a href="contact.html">Contact</a></li>
         </ul>
       </div>
-      <div id="auth-buttons">
-
-      </div>
+      <div id="auth-buttons"></div>
     </section>
 
     <section id="products" class="section-p1">
@@ -77,7 +79,7 @@
 
       async function populateCategories() {
         const categories = await fetchCategories();
-        console.log(categories)
+        console.log(categories);
         const categorySelect = document.getElementById("category");
         categorySelect.innerHTML = `<option value="">All</option>`;
         categories.forEach((category) => {
@@ -97,11 +99,14 @@
         populateProducts();
       });
 
-
       async function populateProducts() {
         featuredProdcutsContainer.innerHTML = "";
-        const selectedCategory = document.getElementById("category").value ?? "";
-        const products = await searchProducts(document.getElementById("search-field").value, selectedCategory);
+        const selectedCategory =
+          document.getElementById("category").value ?? "";
+        const products = await searchProducts(
+          document.getElementById("search-field").value,
+          selectedCategory
+        );
         console.log("Products", products);
         if (products.length === 0) {
           featuredProdcutsContainer.innerHTML = "<h3>No products found</h3>";
@@ -110,6 +115,14 @@
         products.forEach((product) => {
           const pro = document.createElement("div");
           pro.classList.add("pro");
+          let starsHtml = "";
+          let averageRating =
+            product.reviews.reduce((acc, review) => acc + review.rating, 0) /
+            product.reviews.length;
+          averageRating = Math.round(averageRating);
+          for (let i = 0; i < averageRating; i++) {
+            starsHtml += `<i class="fas fa-star"></i>`;
+          }
           pro.innerHTML = `
                     <img src="${
                       product.images &&
@@ -119,8 +132,17 @@
                     <div class="des">
                         <span>${product.category?.category_name ?? ""}</span>
                         <h5>${product?.product_name}</h5>
-                        <p>${product?.product_description.length > 100 ? product?.product_description.toString().substr(0,100)+"..." : product?.product_description}</p>
-                        <h4>$${product.product_price}</h4>
+                        <p>${
+                          product?.product_description.length > 100
+                            ? product?.product_description
+                                .toString()
+                                .substr(0, 100) + "..."
+                            : product?.product_description
+                        }</p>
+                        <div class="star">
+                            ${starsHtml}
+                        </div>
+                        <h4>Rs. ${product.product_price}</h4>
                     </div>
                 `;
           pro.addEventListener("click", () => {
