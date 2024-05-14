@@ -15,6 +15,31 @@ async function fetchProducts() {
     }
 }
 
+async function createReview(productId,reviewText, ratingValue){
+    try {
+        const response = await fetch(`${API_BASE_URL}/review`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                review: reviewText,
+                rating: parseInt(ratingValue),
+                product_id: parseInt(productId),
+            }),
+        });
+        if (!response.ok) {
+            throw new Error("Failed to add review");
+        }
+        const review = await response.json();
+        return review;
+    } catch (error) {
+        console.error("Error adding review:", error);
+        return null;
+    }
+}
+
 async function searchProducts(q, category="") {
     try {
         const response = await fetch(`${API_BASE_URL}/product?q=${q}&category_name=${category}`);

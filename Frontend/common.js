@@ -74,3 +74,4 @@ if (authButtons) {
     authButtons.innerHTML = `<button onclick="openLogin()">Login</button>
       <button onclick="openSignup()">Signup</button>`;
   }
+}

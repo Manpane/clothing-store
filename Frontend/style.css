@@ -235,6 +235,7 @@ body{
 #products .pro .des{
     text-align: start;
     padding: 10px 0;
+    max-width: 300px;
 }
 #products .pro .des span{
     color: #606063;
@@ -807,5 +808,3 @@ button {
     width: 100%;
     height: 100%;
 }
-
-
